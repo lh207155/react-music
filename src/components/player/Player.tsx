@@ -8,8 +8,6 @@ import { useSelector, useDispatch } from "../../redux/hooks";
 import { playControllerSlice } from "../../redux/playController/slice";
 
 const Player = () => {
-  console.log("重绘");
-
   const [process, setPorcess] = useState(0);
 
   const [time, setTime] = useState(0);
@@ -31,7 +29,7 @@ const Player = () => {
 
   useEffect(() => {
     syncPlayerStatus(status);
-  }, [status]);
+  }, [status, currentSong]);
 
   useEffect(() => {
     if (player) player.volume = volume;
@@ -49,7 +47,7 @@ const Player = () => {
   };
   // 同步播放状态
   const syncPlayerStatus = (type: "play" | "pause") => {
-    if (!currentSong) return;
+    if (!currentSong.resourceURL) return;
     player?.[type]();
     // 避免大量dispatch
     status !== type && diapatch(playControllerSlice.actions.switchPlayer(type));
@@ -103,7 +101,7 @@ const Player = () => {
       </Box>
       <Box sx={{ height: "40%", position: "relative" }}>
         <Slider
-          disabled={!currentSong}
+          disabled={!currentSong.resourceURL}
           size="small"
           defaultValue={0}
           value={process}

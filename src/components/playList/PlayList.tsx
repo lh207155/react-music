@@ -1,15 +1,12 @@
 import { Box, Divider, Typography } from "@mui/material";
-import { CSSProperties } from "react";
 import { useSelector, useDispatch } from "../../redux/hooks";
 import { playControllerSlice } from "../../redux/playController/slice";
-import { Song } from "../../redux/playList/slice";
+import { Song } from "../../redux/playController/slice";
 import cssStyles from "./PlayList.module.css";
-interface Props {
-  styles: CSSProperties;
-}
 
-const PlayList = ({ styles }: Props) => {
+const PlayList = () => {
   const playListState = useSelector((state) => state.playList);
+  const { playListIsOpen } = useSelector((state) => state.playController);
   const dispatch = useDispatch();
   const handleSelect = async (i: Song) => {
     await dispatch(playControllerSlice.actions.selectSong(i));
@@ -17,18 +14,18 @@ const PlayList = ({ styles }: Props) => {
   };
   return (
     <Box
-      style={{ ...styles }}
       sx={{
         height: "100%",
         width: "500px",
         display: "flex",
         flexDirection: "column",
         backgroundColor: "rgb(250,250,250)",
-        backdropFilter: "blur(10px)",
-        boxShadow: "10px 0 10px black",
         padding: "20px",
         boxSizing: "border-box",
       }}
+      className={`${cssStyles.playList} ${
+        playListIsOpen ? cssStyles["slide-in"] : cssStyles["slide-out"]
+      }`}
     >
       <Box>
         <Typography sx={{ fontSize: "20px", fontWeight: 700 }}>
@@ -50,7 +47,7 @@ const PlayList = ({ styles }: Props) => {
         <ul className={cssStyles.ulStyle}>
           {playListState.list.map((i) => (
             <li
-              key={i.name}
+              key={i.id}
               onClick={() => {
                 handleSelect(i);
               }}

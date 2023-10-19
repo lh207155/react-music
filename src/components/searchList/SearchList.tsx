@@ -1,28 +1,25 @@
 import { useEffect } from "react";
-import { Box, Button, Typography } from "@mui/material";
-import { useSongListDetail } from "../../hooks/useSongListDetail";
-import { useParams } from "react-router-dom";
-import styles from "./SongList.module.css";
-import { useDispatch } from "../../redux/hooks";
-import { addSongsToPlayList } from "../../redux/playList/slice";
+import { Box, Button } from "@mui/material";
+import styles from "../songList/SongList.module.css";
 import { playControllerSlice } from "../../redux/playController/slice";
+import { addSongsToPlayList } from "../../redux/playList/slice";
+import { useDispatch } from "../../redux/hooks";
+import { useParams } from "react-router-dom";
+import { useSearch } from "../../hooks/useSearch";
 
-const SongList = () => {
+const SearchList = () => {
   const dispatch = useDispatch();
   const params = useParams();
-
-  const { fetchSongListDetail, songListDetail, loading } = useSongListDetail();
-
+  const { songList, error, loading, fetchSearchSongs } = useSearch();
   const addSongAndPlay = async (i) => {
     await dispatch(addSongsToPlayList(i));
     dispatch(playControllerSlice.actions.playSong());
   };
-
   useEffect(() => {
-    params.id && fetchSongListDetail(params.id);
-  }, []);
+    fetchSearchSongs(params.keywords as string);
+  }, [params.keywords]);
 
-  if (loading) return;
+  if (loading || !songList) return;
   return (
     <Box
       sx={{
@@ -32,22 +29,7 @@ const SongList = () => {
         overflow: "auto",
       }}
     >
-      <Box sx={{ display: "flex" }}>
-        <img
-          src={songListDetail.playlist.coverImgUrl}
-          height={180}
-          width={180}
-        />
-        <Box>
-          <Typography component="p">
-            治愈纯音乐｜人间温柔 聆听时光静好
-          </Typography>
-          <Box>
-            <Button>播放全部</Button>
-          </Box>
-        </Box>
-      </Box>
-      <Box sx={{ marginTop: "20px" }}>
+      <Box>
         <table width="100%" cellSpacing={0}>
           <thead>
             <tr
@@ -72,7 +54,7 @@ const SongList = () => {
             </tr>
           </thead>
           <tbody>
-            {songListDetail.playlist.tracks.map((i) => (
+            {songList.result.songs.map((i) => (
               <tr
                 className={styles["tr:nth-child(odd)"]}
                 key={i.id}
@@ -91,12 +73,12 @@ const SongList = () => {
                 </td>
                 <td>
                   <div style={{ height: "40px" }}>
-                    <span>{i.ar[0].name}</span>
+                    <span>{i.artists[0].name}</span>
                   </div>
                 </td>
                 <td>
                   <div style={{ height: "40px" }}>
-                    <span>{i.al.name}</span>
+                    <span>{i.album.name}</span>
                   </div>
                 </td>
                 <td>
@@ -114,4 +96,4 @@ const SongList = () => {
   );
 };
 
-export default SongList;
+export default SearchList;

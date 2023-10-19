@@ -1,18 +1,27 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { Song } from "../playList/slice";
+import { SongType } from "../../types/songType";
 import { PayloadAction } from "@reduxjs/toolkit";
+import { addSongsToPlayList } from "../playList/slice";
+
+export interface Song extends SongType {
+  resourceURL: string;
+}
 interface PlayState {
   playListIsOpen: boolean;
-  currentSong?: Song;
+  currentSong: Song;
   volume: number;
   status: "play" | "pause";
+  error: unknown;
 }
 
 const initialState: PlayState = {
   playListIsOpen: false,
   volume: 0.5,
-
+  currentSong: {
+    resourceURL: "",
+  } as Song,
   status: "pause",
+  error: null,
 };
 
 // 添加一首歌曲到播放器里
@@ -51,7 +60,7 @@ const correctTime = (
 ) => {
   if (!state.currentSong || action.payload === null) return;
 
-  state.currentSong.time = action.payload;
+  state.currentSong.dt = action.payload;
 };
 export const playControllerSlice = createSlice({
   name: "playController",
@@ -64,5 +73,16 @@ export const playControllerSlice = createSlice({
     switchPlayer,
     correctTime,
   },
-  extraReducers: {},
+  extraReducers: (builder) => {
+    // builder.addCase(selectSong.fulfilled, (state, action) => {
+    //   state.currentSong = action.payload;
+    // });
+    // builder.addCase(selectSong.rejected, (state, action) => {
+    //   state.error = action.payload;
+    // });
+
+    builder.addCase(addSongsToPlayList.fulfilled, (state, action) => {
+      state.currentSong = action.payload;
+    });
+  },
 });

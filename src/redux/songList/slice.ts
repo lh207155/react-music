@@ -1,10 +1,11 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "../../services/http";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { SongListDetailType } from "../../types/songListType";
 
 interface SongList {
   loading: boolean;
   error: string | unknown;
-  data: unknown[];
+  data: SongListDetailType[];
 }
 const initialState: SongList = {
   loading: true,

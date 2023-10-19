@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 import styles from "./Content.module.css";
 import { Box } from "@mui/material";
-import PlayList from "../playList/PlayList";
 import { useSelector, useDispatch } from "../../redux/hooks";
 import CoverCard from "../coverCard/CoverCard";
 import { fetch as fetchSongCategory } from "../../redux/songCategory/slice";
@@ -16,11 +15,7 @@ const resource = [
 ];
 
 const Content = () => {
-  const {
-    playController: { playListIsOpen },
-    songCategory,
-    songList,
-  } = useSelector((state) => state);
+  const { songCategory, songList } = useSelector((state) => state);
 
   const dispatch = useDispatch();
   useEffect(() => {
@@ -67,17 +62,9 @@ const Content = () => {
               key={i.id}
               imgURL={i.coverImgUrl}
               title={i.name}
-              link={i.id}
+              id={i.id}
             />
           ))}
-      </Box>
-      {/* 播放列表 */}
-      <Box
-        className={`${styles.playList} ${
-          playListIsOpen ? styles["slide-in"] : styles["slide-out"]
-        }`}
-      >
-        <PlayList styles={{}} />
       </Box>
     </Box>
   );

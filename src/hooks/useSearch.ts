@@ -1,17 +1,17 @@
 import { useState } from "react";
 import axios from "../services/http";
-import { SongListDetailType } from "../types/songListType";
+import { SearchResType } from "../types/SearchResType";
 
-export const useSongListDetail = () => {
-  const [songListDetail, setSongListDetail] = useState<SongListDetailType>([]);
+export const useSearch = () => {
+  const [songList, setSongList] = useState<SearchResType>();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const fetchSongListDetail = (songListID: number | string) => {
+  const fetchSearchSongs = (keyword: string) => {
     axios
-      .get(`/playlist/detail?id=${songListID}`)
+      .get(`/searchNew?keywords=${keyword}`)
       .then(({ data }) => {
-        setSongListDetail(data);
+        setSongList(data);
       })
       .catch((error) => {
         setError(error.message);
@@ -20,14 +20,13 @@ export const useSongListDetail = () => {
         setLoading(false);
       });
   };
-
   return {
-    songListDetail,
-    setSongListDetail,
+    songList,
+    setSongList,
     loading,
     setLoading,
     error,
     setError,
-    fetchSongListDetail,
+    fetchSearchSongs,
   };
 };

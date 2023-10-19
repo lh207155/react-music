@@ -1,13 +1,21 @@
 import React from "react";
 import { Box, Typography } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+
 interface SongList {
   imgURL: string;
   title: string;
-  link: string;
+  id: number;
 }
-const CoverCard: React.FC<SongList> = ({ imgURL, link, title }) => {
+const CoverCard: React.FC<SongList> = ({ imgURL, id, title }) => {
+  const nav = useNavigate();
   return (
-    <Box sx={{ marginRight: "10px" }}>
+    <Box
+      sx={{ marginRight: "10px", cursor: "pointer" }}
+      onClick={() => {
+        nav(`/songListDetail/${id}`);
+      }}
+    >
       <img src={imgURL} alt="cover" height={"140px"} width={"140px"} />
       <Typography
         sx={{

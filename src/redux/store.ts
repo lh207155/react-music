@@ -10,7 +10,7 @@ import songListSlice from "./songList/slice";
 const persistConfig = {
   key: "root",
   storage,
-  whitelist: ["playList"],
+  whitelist: [],
 };
 // 组合各切片中的reducer
 const rootReducer = combineReducers({
