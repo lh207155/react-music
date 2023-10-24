@@ -6,13 +6,21 @@ import { addSongsToPlayList } from "../../redux/playList/slice";
 import { useDispatch } from "../../redux/hooks";
 import { useParams } from "react-router-dom";
 import { useSearch } from "../../hooks/useSearch";
+import { SongType } from "../../types/songType";
+import DataError from "../dataError/DataError";
 
 const SearchList = () => {
   const dispatch = useDispatch();
   const params = useParams();
-  const { songList, error, loading, fetchSearchSongs } = useSearch();
-  const addSongAndPlay = async (i) => {
-    await dispatch(addSongsToPlayList(i));
+  const { songList, loading, fetchSearchSongs } = useSearch();
+  const addSongAndPlay = async (i: SongType) => {
+    const j = {
+      ...i,
+      al: { name: i.album.name, id: i.album.id, picUrl: i.album.picUrl },
+      ar: [{ name: i.artists[0].name, id: i.artists[0].id }],
+      dt: i.duration,
+    };
+    await dispatch(addSongsToPlayList(j));
     dispatch(playControllerSlice.actions.playSong());
   };
   useEffect(() => {
@@ -20,6 +28,7 @@ const SearchList = () => {
   }, [params.keywords]);
 
   if (loading || !songList) return;
+  if (!songList.result.songs) return DataError();
   return (
     <Box
       sx={{

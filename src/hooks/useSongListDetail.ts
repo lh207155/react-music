@@ -1,9 +1,16 @@
 import { useState } from "react";
 import axios from "../services/http";
-import { SongListDetailType } from "../types/songListType";
-
+import { SongType } from "../types/songType";
+interface SongListDetail {
+  playlist: {
+    id: number;
+    name: string;
+    coverImgUrl: string;
+    tracks: SongType[];
+  };
+}
 export const useSongListDetail = () => {
-  const [songListDetail, setSongListDetail] = useState<SongListDetailType>([]);
+  const [songListDetail, setSongListDetail] = useState<SongListDetail>();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 

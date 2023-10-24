@@ -5,6 +5,7 @@ import { useSelector, useDispatch } from "../../redux/hooks";
 import CoverCard from "../coverCard/CoverCard";
 import { fetch as fetchSongCategory } from "../../redux/songCategory/slice";
 import { fetch as fetchSongList } from "../../redux/songList/slice";
+import DataError from "../dataError/DataError";
 
 const resource = [
   { label: "网易云音乐", key: 1 },
@@ -15,7 +16,16 @@ const resource = [
 ];
 
 const Content = () => {
-  const { songCategory, songList } = useSelector((state) => state);
+  const {
+    loading: loading1,
+    tags: data1,
+    error: error1,
+  } = useSelector((state) => state.songCategory);
+  const {
+    loading: loading2,
+    data: data2,
+    error: error2,
+  } = useSelector((state) => state.songList);
 
   const dispatch = useDispatch();
   useEffect(() => {
@@ -23,6 +33,12 @@ const Content = () => {
     dispatch(fetchSongList());
   }, []);
 
+  if (loading1 || loading2) {
+    return <p>加载数据中</p>;
+  }
+  if (error1 || error2) {
+    return DataError();
+  }
   return (
     <Box
       sx={{
@@ -44,9 +60,9 @@ const Content = () => {
       </Box>
       {/* 音乐风格 */}
       <Box>
-        {!songCategory.loading && (
+        {!loading1 && (
           <ul className={styles.ulstyle}>
-            {songCategory.songCategories.tags.map((i) => (
+            {data1.map((i) => (
               <li key={i.id} className={styles.musicStyleList}>
                 {i.name}
               </li>
@@ -56,8 +72,8 @@ const Content = () => {
       </Box>
       {/* 歌单列表 */}
       <Box sx={{ display: "flex", flexWrap: "wrap" }}>
-        {!songList.loading &&
-          songList.data.playlists.map((i) => (
+        {!loading2 &&
+          data2.playlists.map((i) => (
             <CoverCard
               key={i.id}
               imgURL={i.coverImgUrl}

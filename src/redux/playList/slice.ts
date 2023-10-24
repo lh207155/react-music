@@ -1,28 +1,49 @@
 import axios from "../../services/http";
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { Song } from "../playController/slice";
+import { createSlice } from "@reduxjs/toolkit";
+import { SongType } from "../../types/songType";
+import { createAppAsyncThunk } from "../hooks";
 
 interface PlayList {
   loading: boolean;
   error: string | null;
-  list: Song[];
+  list: SongType[];
 }
 
 const initialState: PlayList = {
   loading: true,
   error: null,
-  list: [{} as Song],
+  list: [
+    {
+      artists: [{ id: 0, name: "" }],
+      album: {
+        id: 0,
+        name: "",
+        picUrl: "",
+      },
+      name: "",
+      id: 0,
+      dt: 0,
+      resourceURL: "",
+      ar: [{ id: 0, name: "" }],
+      al: {
+        id: 0,
+        name: "",
+        picUrl: "",
+      },
+
+      duration: 0,
+    },
+  ],
 };
 // const addSongsToPlayList = (state: PlayList, action: { payload: Song }) => {
 //   if (state.list.find((i) => i.id === action.payload.id)) return;
 //   state.list.push(action.payload);
 // };
 
-export const addSongsToPlayList = createAsyncThunk(
+export const addSongsToPlayList = createAppAsyncThunk(
   "playController/addSongsToPlayList",
-  async (song: Song, thunkAPI) => {
+  async (song: SongType, thunkAPI) => {
     const state = thunkAPI.getState().playList;
-    console.log(state);
     if (state.list.find((i) => i.id === song.id)) return;
     const { data: data_1 } = await axios.get(`/song/url?id=${song.id}`);
     return {
@@ -37,8 +58,8 @@ export const playListSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder.addCase(addSongsToPlayList.fulfilled, (state, action) => {
-      console.log(state.list);
-      state.list.push(action.payload);
+      state.list[0].id === 0 && state.list.pop();
+      state.list.push(action.payload as SongType);
     });
   },
 });

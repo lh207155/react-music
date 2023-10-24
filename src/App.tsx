@@ -1,13 +1,10 @@
 import "./App.css";
-import { Alert, Box, Container, Grid } from "@mui/material";
+import { Box } from "@mui/material";
 import Header from "./components/header/Header";
 import Footer from "./components/footer/Footer";
 import PlayList from "./components/playList/PlayList";
-import { Height } from "@mui/icons-material";
 import Sider from "./components/sider/Sider";
-import Content from "./components/content/Content";
-import { RouterProvider, BrowserRouter, Outlet } from "react-router-dom";
-import router from "./router";
+import { Outlet } from "react-router-dom";
 
 function App() {
   return (

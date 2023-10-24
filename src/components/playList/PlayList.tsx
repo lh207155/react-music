@@ -1,14 +1,14 @@
 import { Box, Divider, Typography } from "@mui/material";
 import { useSelector, useDispatch } from "../../redux/hooks";
 import { playControllerSlice } from "../../redux/playController/slice";
-import { Song } from "../../redux/playController/slice";
+import { SongType } from "../../types/songType";
 import cssStyles from "./PlayList.module.css";
 
 const PlayList = () => {
   const playListState = useSelector((state) => state.playList);
   const { playListIsOpen } = useSelector((state) => state.playController);
   const dispatch = useDispatch();
-  const handleSelect = async (i: Song) => {
+  const handleSelect = async (i: SongType) => {
     await dispatch(playControllerSlice.actions.selectSong(i));
     dispatch(playControllerSlice.actions.playSong());
   };
@@ -34,7 +34,9 @@ const PlayList = () => {
         <Typography
           component="span"
           sx={{ fontSize: "12px", color: "gray" }}
-        >{`共${playListState.list.length}首`}</Typography>
+        >{`共${
+          playListState.list[0].id === 0 ? "0" : playListState.list.length
+        }首`}</Typography>
         <Typography
           component="span"
           sx={{ color: "blue", fontSize: "12px", float: "right" }}
@@ -43,20 +45,22 @@ const PlayList = () => {
         </Typography>
       </Box>
       <Divider sx={{ margin: "10px 0" }}></Divider>
-      <Box sx={{ flex: 1, height: "100%" }}>
-        <ul className={cssStyles.ulStyle}>
-          {playListState.list.map((i) => (
-            <li
-              key={i.id}
-              onClick={() => {
-                handleSelect(i);
-              }}
-            >
-              {i.name}
-            </li>
-          ))}
-        </ul>
-      </Box>
+      {playListState.list[0].id !== 0 && (
+        <Box sx={{ flex: 1, height: "100%" }}>
+          <ul className={cssStyles.ulStyle}>
+            {playListState.list.map((i) => (
+              <li
+                key={i.id}
+                onClick={() => {
+                  handleSelect(i);
+                }}
+              >
+                {i.name}
+              </li>
+            ))}
+          </ul>
+        </Box>
+      )}
     </Box>
   );
 };

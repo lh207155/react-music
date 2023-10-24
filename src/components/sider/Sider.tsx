@@ -1,5 +1,5 @@
-import { Box, List, ListItem, ListItemButton } from "@mui/material";
-import React from "react";
+import { Box, List, ListItemButton } from "@mui/material";
+
 const menu = [
   {
     label: "发现音乐",

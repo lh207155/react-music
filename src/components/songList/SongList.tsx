@@ -6,14 +6,16 @@ import styles from "./SongList.module.css";
 import { useDispatch } from "../../redux/hooks";
 import { addSongsToPlayList } from "../../redux/playList/slice";
 import { playControllerSlice } from "../../redux/playController/slice";
+import { SongType } from "../../types/songType";
 
 const SongList = () => {
   const dispatch = useDispatch();
   const params = useParams();
 
-  const { fetchSongListDetail, songListDetail, loading } = useSongListDetail();
+  const { fetchSongListDetail, songListDetail, loading, error } =
+    useSongListDetail();
 
-  const addSongAndPlay = async (i) => {
+  const addSongAndPlay = async (i: SongType) => {
     await dispatch(addSongsToPlayList(i));
     dispatch(playControllerSlice.actions.playSong());
   };
@@ -22,7 +24,7 @@ const SongList = () => {
     params.id && fetchSongListDetail(params.id);
   }, []);
 
-  if (loading) return;
+  if (loading || error || !songListDetail) return;
   return (
     <Box
       sx={{

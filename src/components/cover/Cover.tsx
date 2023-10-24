@@ -4,7 +4,6 @@ import coverDefault from "../../assets/record.png";
 
 const Cover = () => {
   const currentSong = useSelector((state) => state.playController.currentSong);
-  console.log("cover");
 
   return (
     // 封面部分
@@ -45,7 +44,7 @@ const Cover = () => {
           </Box>
           <Box>
             <Typography>
-              {currentSong.ar
+              {currentSong?.ar[0]?.name
                 ? currentSong.ar[0].name
                 : currentSong.artists[0].name}
             </Typography>

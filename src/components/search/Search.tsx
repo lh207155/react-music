@@ -1,5 +1,4 @@
 import React, { useRef } from "react";
-import { useSearch } from "../../hooks/useSearch";
 import styles from "./Search.module.css";
 import { useNavigate } from "react-router-dom";
 const Search = () => {

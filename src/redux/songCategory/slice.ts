@@ -9,16 +9,26 @@ interface SongCategory {
 interface SongCategories {
   loading: boolean;
   error: string | unknown;
-  songCategories: SongCategory[];
+  tags: SongCategory[];
 }
 const initialState: SongCategories = {
   loading: true,
   error: null,
-  songCategories: [],
+  tags: [
+    {
+      id: 0,
+      name: "",
+      hot: false,
+    },
+  ],
 };
 export const fetch = createAsyncThunk("songCategory/fetch", async () => {
-  const { data } = await axios.get("/playlist/hot");
-  return data;
+  return axios
+    .get("/playlist/hot")
+    .then(({ data }) => data.tags)
+    .catch((e) => {
+      throw new Error(e.message);
+    });
 });
 export const songCategorySlice = createSlice({
   name: "songCategory",
@@ -29,12 +39,12 @@ export const songCategorySlice = createSlice({
       state.loading = true;
     });
     builder.addCase(fetch.fulfilled, (state, action) => {
-      state.songCategories = action.payload;
+      state.tags = action.payload;
       state.loading = false;
     });
     builder.addCase(fetch.rejected, (state, action) => {
       state.loading = false;
-      state.error = action.payload;
+      state.error = action.error.message;
     });
   },
 });

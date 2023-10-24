@@ -1,5 +1,5 @@
-import React, { useRef, useState } from "react";
-import { Box, Card, Slider } from "@mui/material";
+import { useState } from "react";
+import { Box, Slider } from "@mui/material";
 import VolumeUpIcon from "@mui/icons-material/VolumeUp";
 // import VolumeOffIcon from "@mui/icons-material/VolumeOff";
 import PlaylistPlayIcon from "@mui/icons-material/PlaylistPlay";

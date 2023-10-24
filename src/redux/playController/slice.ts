@@ -3,29 +3,45 @@ import { SongType } from "../../types/songType";
 import { PayloadAction } from "@reduxjs/toolkit";
 import { addSongsToPlayList } from "../playList/slice";
 
-export interface Song extends SongType {
-  resourceURL: string;
-}
 interface PlayState {
   playListIsOpen: boolean;
-  currentSong: Song;
+  currentSong: SongType;
   volume: number;
   status: "play" | "pause";
   error: unknown;
+  loading: boolean;
 }
 
 const initialState: PlayState = {
+  loading: true,
   playListIsOpen: false,
   volume: 0.5,
   currentSong: {
+    artists: [{ id: 0, name: "" }],
+    album: {
+      id: 0,
+      name: "",
+      picUrl: "",
+    },
+    name: "",
+    id: 0,
+    dt: 0,
     resourceURL: "",
-  } as Song,
+    ar: [{ id: 0, name: "" }],
+    al: {
+      id: 0,
+      name: "",
+      picUrl: "",
+    },
+
+    duration: 0,
+  },
   status: "pause",
   error: null,
 };
 
 // 添加一首歌曲到播放器里
-const selectSong = (state: PlayState, action: PayloadAction<Song>) => {
+const selectSong = (state: PlayState, action: PayloadAction<SongType>) => {
   state.currentSong = action.payload;
 };
 
@@ -82,7 +98,14 @@ export const playControllerSlice = createSlice({
     // });
 
     builder.addCase(addSongsToPlayList.fulfilled, (state, action) => {
-      state.currentSong = action.payload;
+      state.currentSong = action.payload as SongType;
+      state.loading = false;
+    });
+    builder.addCase(addSongsToPlayList.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(addSongsToPlayList.rejected, (state, action) => {
+      state.error = action.payload;
     });
   },
 });
